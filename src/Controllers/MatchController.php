@@ -20,7 +20,7 @@ class MatchController extends Controller
                 WHERE MatchID = :matchId
                 ORDER BY md.Position';
 
-        $data->MatchDecks = DB::select($sql, ['matchId' => $data->MatchID]) as $match);
+        $data->MatchDecks = DB::select($sql, ['matchId' => $data->MatchID]);
 
         return view('PreconLeagueViews::default', ['content' => 'match', 'data' => $data]);
     }

@@ -3,7 +3,8 @@
 namespace DavieJJ\PreconLeague\Controllers;
 
 use App\Http\Controllers\Controller,
-    Illuminate\Support\Facades\DB;
+    Illuminate\Support\Facades\DB,
+    DavieJJ\PreconLeague\Controllers\MatchDeckController;
 
 class TournamentController extends Controller
 {
@@ -12,7 +13,7 @@ class TournamentController extends Controller
         $data = new \StdClass();
 
         $sql = 'SELECT m.ID as MatchID, m.DateAdded as MatchDate, p.ID as PlayerID, p.Name as PlayerName,
-                    d.ID as DeckID, d.Name as DeckName, md.Position
+                    d.ID as DeckID, d.Name as DeckName, md.Commander, md.Position
                 FROM tournament t
                 INNER JOIN `match` m ON m.TournamentID = t.ID
                 INNER JOIN matchdeck md ON md.MatchID = m.ID
@@ -34,6 +35,7 @@ class TournamentController extends Controller
             $data->Matches[$match->MatchID]->Players[$match->Position]->Name = $match->PlayerName;
             $data->Matches[$match->MatchID]->Players[$match->Position]->DeckID = $match->DeckID;
             $data->Matches[$match->MatchID]->Players[$match->Position]->DeckName = $match->DeckName;
+            $data->Matches[$match->MatchID]->Players[$match->Position]->Commanders = MatchDeckController::GetCommanderCard($match->Commander);
         }
 
         return view('PreconLeagueViews::default', ['content' => 'matchlist', 'data' => $data]);
